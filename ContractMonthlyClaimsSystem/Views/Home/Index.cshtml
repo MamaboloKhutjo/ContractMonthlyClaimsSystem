@@ -1,0 +1,165 @@
+﻿@{
+    ViewData["Title"] = "Contract Monthly Claims System";
+}
+
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Contract Monthly Claims System</h1>
+                <p class="lead mb-4">Streamline your contract management and claims processing with our comprehensive solution. Efficient, secure, and user-friendly.</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="@Url.Action("Login", "Account")" class="btn btn-light btn-lg px-4 py-2">
+                        <i class="fas fa-sign-in-alt me-2"></i>Get Started
+                    </a>
+                    <a href="@Url.Action("About", "Home")" class="btn btn-outline-light btn-lg px-4 py-2">
+                        <i class="fas fa-info-circle me-2"></i>Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="hero-image mt-5 mt-lg-0">
+                    <i class="fas fa-file-invoice-dollar display-1 text-warning"></i>
+                    <div class="mt-4">
+                        <i class="fas fa-chart-line fa-3x text-success me-4"></i>
+                        <i class="fas fa-shield-alt fa-3x text-info me-4"></i>
+                        <i class="fas fa-clock fa-3x text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Why Choose CMCS?</h2>
+            <p class="text-muted">Experience the difference with our powerful features</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 h-100">
+                    <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3">
+                        <i class="fas fa-bolt fa-2x"></i>
+                    </div>
+                    <h4>Fast Processing</h4>
+                    <p class="text-muted">Quick and efficient claims processing with automated workflows.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 h-100">
+                    <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3">
+                        <i class="fas fa-lock fa-2x"></i>
+                    </div>
+                    <h4>Secure & Reliable</h4>
+                    <p class="text-muted">Bank-level security to protect your sensitive contract data.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 h-100">
+                    <div class="feature-icon bg-info text-white rounded-circle mx-auto mb-3">
+                        <i class="fas fa-chart-bar fa-2x"></i>
+                    </div>
+                    <h4>Real-time Analytics</h4>
+                    <p class="text-muted">Comprehensive reporting and analytics for better decision making.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="stats-section bg-light py-5">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <h3 class="text-primary fw-bold">500+</h3>
+                    <p class="text-muted">Active Users</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <h3 class="text-success fw-bold">10,000+</h3>
+                    <p class="text-muted">Claims Processed</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <h3 class="text-info fw-bold">99.9%</h3>
+                    <p class="text-muted">Uptime</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <h3 class="text-warning fw-bold">24/7</h3>
+                    <p class="text-muted">Support</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section bg-primary text-white py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Get Started?</h2>
+        <p class="lead mb-4">Join thousands of satisfied users managing their contracts efficiently.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="@Url.Action("Register", "Account")" class="btn btn-light btn-lg px-4 py-2">
+                <i class="fas fa-user-plus me-2"></i>Sign Up Free
+            </a>
+            <a href="@Url.Action("Login", "Account")" class="btn btn-outline-light btn-lg px-4 py-2">
+                <i class="fas fa-sign-in-alt me-2"></i>Login
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .min-vh-75 {
+        min-height: 75vh;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, #001a4d 0%, #00308F 100%);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .feature-card {
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: #001a4d;
+    }
+
+    .stat-item h3 {
+        font-size: 2.5rem;
+    }
+</style>
