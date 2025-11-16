@@ -4,7 +4,6 @@
 
 ![ASP.NET MVC](https://img.shields.io/badge/ASP.NET-MVC-%235C2D91?style=for-the-badge&logo=.net)
 ![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
-![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
 
 *A modern, enterprise-grade solution for streamlining monthly contract claims processing*
