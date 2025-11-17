@@ -9,6 +9,7 @@ namespace ContractMonthlyClaimsSystem.Services
         Task<List<User>> GetUsersAsync();
         Task<User> GetUserByIdAsync(int id);
         Task<User> GetUserByCredentialsAsync(string username, string password);
+        Task<bool> UserExistsAsync(string name, string surname);
         Task AddUserAsync(User user);
         Task UpdateUserAsync(User user);
         Task DeleteUserAsync(int id);

@@ -11,77 +11,112 @@ namespace ContractMonthlyClaimsSystem.Controllers
 
         private readonly IUserRepository _userRepository;
 
-            public AccountController(IUserRepository userRepository)
+        public AccountController(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            HttpContext.Session.Clear();
+            _userRepository.CurrentUser = null;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
             {
-                _userRepository = userRepository;
-            }
-
-            [HttpGet]
-            public IActionResult Login()
-            {
-                return View();
-            }
-
-            [HttpPost]
-            public async Task<IActionResult> Login(LoginViewModel model)
-            {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-
-                var user = await _userRepository.GetUserByCredentialsAsync(model.Username, model.Password);
-                if (user != null)
-                {
-                    _userRepository.CurrentUser = user;
-
-                    // Store user in session
-                    HttpContext.Session.SetString("UserId", user.Id.ToString());
-                    HttpContext.Session.SetString("UserName", user.FullName);
-                    HttpContext.Session.SetString("UserRole", user.Role);
-
-                    // Redirect based on role
-                    return RedirectToAction("Dashboard", user.Role.ToLower().Replace(" ", ""));
-                }
-
-                ModelState.AddModelError("", "Invalid username or password.");
                 return View(model);
             }
 
-            [HttpGet]
-            public IActionResult Register()
+            var user = await _userRepository.GetUserByCredentialsAsync(model.Username, model.Password);
+            if (user != null)
             {
-                return View();
+                _userRepository.CurrentUser = user;
+
+
+                HttpContext.Session.SetString("UserId", user.Id.ToString());
+                HttpContext.Session.SetString("UserName", user.FullName);
+                HttpContext.Session.SetString("UserRole", user.Role);
+
+                return RedirectToAction("Dashboard", GetControllerName(user.Role));
             }
 
-            [HttpPost]
-            public async Task<IActionResult> Register(RegisterViewModel model)
-            {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-
-                var user = new User
-                {
-                    Name = model.Name,
-                    Surname = model.Surname,
-                    Password = model.Password,
-                    Role = model.Role
-                };
-
-                await _userRepository.AddUserAsync(user);
-
-                TempData["SuccessMessage"] = "Registration successful! Please log in.";
-                return RedirectToAction("Login");
-            }
-
-            [HttpPost]
-            public IActionResult Logout()
-            {
-                HttpContext.Session.Clear();
-                _userRepository.CurrentUser = null;
-                return RedirectToAction("Index", "Home");
-            }
+            ModelState.AddModelError("", "Invalid username or password.");
+            return View(model);
         }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Check if user already exists
+            bool userExists = await _userRepository.UserExistsAsync(model.Name, model.Surname);
+            if (userExists)
+            {
+                ModelState.AddModelError("", "A user with this name already exists. Please use a different name or log in.");
+                return View(model);
+            }
+
+            // Create new user
+            var user = new User
+            {
+                Name = model.Name.Trim(),
+                Surname = model.Surname.Trim(),
+                Password = model.Password,
+                Role = model.Role
+            };
+
+            await _userRepository.AddUserAsync(user);
+
+            TempData["SuccessMessage"] = "Registration successful! Please log in with your credentials.";
+            return RedirectToAction("Login");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout()
+        {
+            // Clear session
+            HttpContext.Session.Clear();
+            _userRepository.CurrentUser = null;
+
+            TempData["SuccessMessage"] = "You have been logged out successfully.";
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        // Helper method to get controller name based on role
+        private string GetControllerName(string role)
+        {
+            return role.ToLower() switch
+            {
+                "lecturer" => "Lecturer",
+                "manager" => "Manager",
+                "program coordinator" => "Manager",
+                _ => "Home"
+            };
+        }
+    }
 }

@@ -1,4 +1,4 @@
-﻿@model ContractMonthlyClaimsSystem.Models.LoginViewModel
+﻿@model LoginViewModel
 
 @{
     ViewData["Title"] = "Login - CMCS";
@@ -9,7 +9,7 @@
         <div class="col-md-6 col-lg-5">
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-primary text-white text-center py-4">
-                    <h2 class="mb-0"><i class="fas fa-file-invoice-dollar me-2"></i>CMCS Login</h2>
+                    <h2 class="mb-0"><i class="fas fa-sign-in-alt me-2"></i>CMCS Login</h2>
                 </div>
                 <div class="card-body p-5">
                     @if (TempData["SuccessMessage"] != null)
@@ -21,16 +21,25 @@
                     }
 
                     <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+
                         <div class="mb-3">
-                            <label asp-for="Username" class="form-label">Name & Surname</label>
-                            <input asp-for="Username" class="form-control form-control-lg" placeholder="Enter your full name" />
+                            <label asp-for="Username" class="form-label">Full Name</label>
+                            <input asp-for="Username" class="form-control form-control-lg"
+                                   placeholder="Enter your first and last name" />
                             <span asp-validation-for="Username" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-4">
                             <label asp-for="Password" class="form-label">Password</label>
-                            <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="Enter your password" />
+                            <input asp-for="Password" type="password" class="form-control form-control-lg"
+                                   placeholder="Enter your password" />
                             <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label">Remember me</label>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
@@ -39,8 +48,9 @@
 
                         <div class="text-center">
                             <span class="text-muted">Don't have an account? </span>
-                            <a asp-action="Register" class="text-decoration-none">Sign Up Here</a>
+                            <a asp-action="Register" class="text-decoration-none fw-semibold">Sign Up Here</a>
                         </div>
+
                     </form>
                 </div>
             </div>

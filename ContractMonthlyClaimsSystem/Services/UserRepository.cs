@@ -42,22 +42,43 @@ namespace ContractMonthlyClaimsSystem.Services
             }
         }
 
-        public async Task<List<User>> GetUsersAsync()
+        public Task<List<User>> GetUsersAsync()
         {
-            return await Task.FromResult(_users);
+            return Task.FromResult(_users);
         }
 
-        public async Task<User> GetUserByIdAsync(int id)
+        public Task<User> GetUserByIdAsync(int id)
         {
-            return await Task.FromResult(_users.FirstOrDefault(u => u.Id == id));
+            return Task.FromResult(_users.FirstOrDefault(u => u.Id == id));
         }
 
-        public async Task<User> GetUserByCredentialsAsync(string username, string password)
+        public Task<User> GetUserByCredentialsAsync(string username, string password)
         {
+            // Split the username into name and surname
+            var nameParts = username.Split(' ');
+            if (nameParts.Length < 2)
+            {
+                return Task.FromResult<User>(null);
+            }
+
+            var name = nameParts[0];
+            var surname = string.Join(" ", nameParts.Skip(1));
+
             var user = _users.FirstOrDefault(u =>
-                (u.Name + " " + u.Surname).ToLower() == username.ToLower() &&
+                u.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase) &&
+                u.Surname.Equals(surname, System.StringComparison.OrdinalIgnoreCase) &&
                 u.Password == password);
-            return await Task.FromResult(user);
+
+            return Task.FromResult(user);
+        }
+
+        public Task<bool> UserExistsAsync(string name, string surname)
+        {
+            var exists = _users.Any(u =>
+                u.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase) &&
+                u.Surname.Equals(surname, System.StringComparison.OrdinalIgnoreCase));
+
+            return Task.FromResult(exists);
         }
 
         public async Task AddUserAsync(User user)
@@ -67,7 +88,7 @@ namespace ContractMonthlyClaimsSystem.Services
             await Task.CompletedTask;
         }
 
-        public async Task UpdateUserAsync(User user)
+        public Task UpdateUserAsync(User user)
         {
             var existingUser = _users.FirstOrDefault(u => u.Id == user.Id);
             if (existingUser != null)
@@ -77,17 +98,17 @@ namespace ContractMonthlyClaimsSystem.Services
                 existingUser.Password = user.Password;
                 existingUser.Role = user.Role;
             }
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteUserAsync(int id)
+        public Task DeleteUserAsync(int id)
         {
             var user = _users.FirstOrDefault(u => u.Id == id);
             if (user != null)
             {
                 _users.Remove(user);
             }
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 
