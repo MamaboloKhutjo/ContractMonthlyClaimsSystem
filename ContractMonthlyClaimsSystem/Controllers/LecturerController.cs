@@ -82,6 +82,7 @@ namespace ContractMonthlyClaimsSystem.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+            // Create a fresh model
             var model = new SubmitClaimViewModel();
             return View(model);
         }
@@ -90,8 +91,18 @@ namespace ContractMonthlyClaimsSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitNewClaim(SubmitClaimViewModel model)
         {
+            Console.WriteLine("SubmitNewClaim POST method called");
+
+            // Always recalculate amount
+            model.CalculatedAmount = model.HoursWorked * model.HourlyRate;
+
             if (!ModelState.IsValid)
             {
+                Console.WriteLine("ModelState is invalid");
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine($"Validation error: {error.ErrorMessage}");
+                }
                 return View("SubmitClaim", model);
             }
 
@@ -104,31 +115,60 @@ namespace ContractMonthlyClaimsSystem.Controllers
                     return RedirectToAction("Login", "Account");
                 }
 
+                // Server-side validation
+                var calculatedAmount = model.HoursWorked * model.HourlyRate;
+
+                Console.WriteLine($"Server-side validation: Hours={model.HoursWorked}, Rate={model.HourlyRate}, Amount={calculatedAmount}");
+
+                // Validate amount limits
+                if (calculatedAmount > 50000)
+                {
+                    ModelState.AddModelError("", "Claim amount cannot exceed R50,000 per submission.");
+                    Console.WriteLine("Amount exceeds R50,000");
+                    return View("SubmitClaim", model);
+                }
+
+                if (calculatedAmount < 10)
+                {
+                    ModelState.AddModelError("", "Claim amount must be at least R10.");
+                    Console.WriteLine("Amount less than R10");
+                    return View("SubmitClaim", model);
+                }
+
                 // Generate a unique claim ID
                 var allClaims = await _claimRepository.GetClaimsAsync();
                 var claimNumber = allClaims.Count + 1;
                 var claimId = $"CLM{claimNumber:000}";
 
-                
+                Console.WriteLine($"Creating claim: {claimId}");
+
+                // Create a new Claim from the ViewModel
                 var claim = new Claim
                 {
                     ClaimId = claimId,
                     ContractName = model.ContractName,
-                    Amount = model.Amount,
+                    HoursWorked = model.HoursWorked,
+                    HourlyRate = model.HourlyRate,
+                    Amount = calculatedAmount,
                     Description = model.Description ?? string.Empty,
                     LecturerName = userName,
-                    LecturerEmail = $"{userName.Replace(" ", ".").ToLower()}@university.com", // Simulated email
+                    LecturerEmail = $"{userName.Replace(" ", ".").ToLower()}@university.com",
                     SubmittedDate = DateTime.Now,
                     Status = "Pending"
                 };
 
                 await _claimRepository.AddClaimAsync(claim);
 
-                TempData["SuccessMessage"] = $"Claim {claim.ClaimId} submitted successfully! It is now pending approval.";
+                Console.WriteLine($"Claim {claimId} created successfully");
+
+                TempData["SuccessMessage"] = $"Claim {claim.ClaimId} for {claim.FormattedAmount} submitted successfully! It is now pending approval.";
                 return RedirectToAction("Dashboard");
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error in SubmitNewClaim: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
                 ModelState.AddModelError("", "An error occurred while submitting the claim. Please try again.");
                 return View("SubmitClaim", model);
             }

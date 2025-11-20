@@ -42,7 +42,8 @@
                             <tr>
                                 <th>Claim ID</th>
                                 <th>Contract</th>
-                                <th>Submitted Date</th>
+                                <th>Hours</th>
+                                <th>Rate</th>
                                 <th>Amount</th>
                                 <th>Status</th>
                                 <th>Reviewer</th>
@@ -54,11 +55,10 @@
                             @foreach (var claim in Model)
                             {
                                 <tr>
-                                    <td>
-                                        <strong>@claim.ClaimId</strong>
-                                    </td>
+                                    <td><strong>@claim.ClaimId</strong></td>
                                     <td>@claim.ContractName</td>
-                                    <td>@claim.FormattedDate</td>
+                                    <td>@claim.FormattedHours</td>
+                                    <td>@claim.FormattedHourlyRate</td>
                                     <td class="fw-bold">@claim.FormattedAmount</td>
                                     <td>
                                         <span class="badge @claim.StatusBadgeClass">@claim.Status</span>
@@ -76,13 +76,11 @@
                                     <td>@claim.FormattedReviewedDate</td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <!-- View Details Button - Always available -->
                                             <a href="@Url.Action("ClaimDetails", "Lecturer", new { id = claim.ClaimId })"
                                                class="btn btn-outline-primary">
                                                 <i class="fas fa-eye me-1"></i>View
                                             </a>
 
-                                            <!-- Retract Button - Only for pending, unreviewed claims -->
                                             @if (claim.Status == "Pending" && string.IsNullOrEmpty(claim.ReviewedBy))
                                             {
                                                 <form method="post" asp-action="RetractClaim" class="d-inline">
