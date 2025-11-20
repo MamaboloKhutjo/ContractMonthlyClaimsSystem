@@ -1,0 +1,46 @@
+﻿@{
+    var userRole = Context.Session.GetString("UserRole");
+    var userName = Context.Session.GetString("UserName");
+}
+
+@if (!string.IsNullOrEmpty(userName))
+{
+    <ul class="navbar-nav">
+        @if (userRole?.ToLower() == "lecturer")
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Dashboard", "Lecturer")">
+                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("SubmitClaim", "Lecturer")">
+                    <i class="fas fa-plus-circle me-1"></i>Submit Claim
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("MyClaims", "Lecturer")">
+                    <i class="fas fa-list me-1"></i>My Claims
+                </a>
+            </li>
+        }
+        else if (userRole?.ToLower() == "manager" || userRole?.ToLower() == "program coordinator")
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Dashboard", "Manager")">
+                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("PendingClaims", "Manager")">
+                    <i class="fas fa-clock me-1"></i>Pending Claims
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("AllClaims", "Manager")">
+                    <i class="fas fa-file-invoice me-1"></i>All Claims
+                </a>
+            </li>
+        }
+    </ul>
+}

@@ -1,0 +1,99 @@
+﻿@model ReviewClaimViewModel
+
+@{
+    ViewData["Title"] = "Review Claim";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-search me-2"></i>Review Claim - @Model.Claim.ClaimId
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <!-- Claim Details -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Claim Information</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Claim ID:</th>
+                                    <td>@Model.Claim.ClaimId</td>
+                                </tr>
+                                <tr>
+                                    <th>Lecturer:</th>
+                                    <td>@Model.Claim.LecturerName</td>
+                                </tr>
+                                <tr>
+                                    <th>Contract:</th>
+                                    <td>@Model.Claim.ContractName</td>
+                                </tr>
+                                <tr>
+                                    <th>Submitted:</th>
+                                    <td>@Model.Claim.FormattedDate</td>
+                                </tr>
+                                <tr>
+                                    <th>Amount:</th>
+                                    <td class="fw-bold text-primary">@Model.Claim.FormattedAmount</td>
+                                </tr>
+                                <tr>
+                                    <th>Status:</th>
+                                    <td>
+                                        <span class="badge @Model.Claim.StatusBadgeClass">@Model.Claim.Status</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Description</h5>
+                            <div class="border rounded p-3 bg-light">
+                                @if (string.IsNullOrEmpty(Model.Claim.Description))
+                                {
+                                    <span class="text-muted">No description provided</span>
+                                }
+                                else
+                                {
+                                    @Model.Claim.Description
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Form -->
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-4">
+                            <label for="reviewNotes" class="form-label">Review Notes (Optional)</label>
+                            <textarea class="form-control" id="reviewNotes" name="reviewNotes"
+                                      rows="4" placeholder="Add any notes or comments about this claim...">@Model.ReviewNotes</textarea>
+                            <div class="form-text">These notes will be visible to the lecturer.</div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2 justify-content-between">
+                            <div>
+                                <a href="@Url.Action("PendingClaims", "Manager")" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                                </a>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="submit" formaction="@Url.Action("RejectClaim", "Manager", new { claimId = Model.Claim.ClaimId })"
+                                        class="btn btn-danger" onclick="return confirm('Are you sure you want to REJECT this claim?')">
+                                    <i class="fas fa-times me-2"></i>Reject Claim
+                                </button>
+                                <button type="submit" formaction="@Url.Action("ApproveClaim", "Manager", new { claimId = Model.Claim.ClaimId })"
+                                        class="btn btn-success" onclick="return confirm('Are you sure you want to APPROVE this claim?')">
+                                    <i class="fas fa-check me-2"></i>Approve Claim
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

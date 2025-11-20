@@ -1,0 +1,96 @@
+﻿@model List<Claim>
+
+@{
+    ViewData["Title"] = "Pending Claims";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>
+                    <i class="fas fa-clock me-2 text-warning"></i>Pending Claims
+                </h1>
+                <span class="badge bg-warning fs-6">@Model.Count pending</span>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Claim ID</th>
+                                <th>Lecturer</th>
+                                <th>Contract</th>
+                                <th>Submitted</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var claim in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@claim.ClaimId</strong>
+                                    </td>
+                                    <td>@claim.LecturerName</td>
+                                    <td>@claim.ContractName</td>
+                                    <td>@claim.FormattedDate</td>
+                                    <td class="fw-bold text-primary">@claim.FormattedAmount</td>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(claim.Description))
+                                        {
+                                            <span class="text-muted">No description</span>
+                                        }
+                                        else
+                                        {
+                                            <span title="@claim.Description">
+                                                @(claim.Description.Length > 50 ? claim.Description.Substring(0, 50) + "..." : claim.Description)
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="@Url.Action("ReviewClaim", "Manager", new { id = claim.ClaimId })"
+                                               class="btn btn-outline-primary">
+                                                <i class="fas fa-search me-1"></i>Review
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                <h3 class="text-success">All Caught Up!</h3>
+                <p class="text-muted">There are no pending claims requiring approval.</p>
+                <a href="@Url.Action("Dashboard", "Manager")" class="btn btn-primary">
+                    <i class="fas fa-tachometer-alt me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    }
+</div>

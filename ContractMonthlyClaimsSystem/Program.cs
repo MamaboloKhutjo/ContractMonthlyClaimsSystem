@@ -14,6 +14,7 @@ builder.Services.AddSession(options =>
 
 // Register services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IClaimRepository, ClaimRepository>(); 
 
 var app = builder.Build();
 

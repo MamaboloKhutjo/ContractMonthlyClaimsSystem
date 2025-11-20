@@ -1,0 +1,112 @@
+﻿@model SubmitClaimViewModel
+
+@{
+    ViewData["Title"] = "Submit New Claim";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-file-invoice me-2"></i>Submit New Claim
+                    </h2>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <form asp-action="SubmitNewClaim" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Display validation summary -->
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <!-- Contract Name -->
+                        <div class="mb-3">
+                            <label asp-for="ContractName" class="form-label">Contract Name *</label>
+                            <select asp-for="ContractName" class="form-select" required>
+                                <option value="">Select a contract...</option>
+                                <option value="Software Development 101">Software Development 101</option>
+                                <option value="Mathematics 202">Mathematics 202</option>
+                                <option value="Physics 301">Physics 301</option>
+                                <option value="Engineering 401">Engineering 401</option>
+                                <option value="Data Structures 205">Data Structures 205</option>
+                                <option value="Algorithms 310">Algorithms 310</option>
+                            </select>
+                            <span asp-validation-for="ContractName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="mb-3">
+                            <label asp-for="Amount" class="form-label">Amount (R) *</label>
+                            <input asp-for="Amount" type="number" step="0.01" min="0.01" class="form-control"
+                                   placeholder="0.00" required>
+                            <span asp-validation-for="Amount" class="text-danger"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="4"
+                                      placeholder="Describe the purpose of this claim (optional)..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                            <div class="form-text">Maximum 500 characters</div>
+                        </div>
+
+                        <!-- Auto-generated info -->
+                        <div class="alert alert-info">
+                            <small>
+                                <i class="fas fa-info-circle me-1"></i>
+                                <strong>Claim ID:</strong> Will be automatically generated<br>
+                                <strong>Submitted by:</strong> @Context.Session.GetString("UserName")<br>
+                                <strong>Status:</strong> Will be set to "Pending" for review
+                            </small>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Claim
+                            </button>
+                            <a href="@Url.Action("Dashboard", "Lecturer")" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Client-side validation enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const amountInput = document.querySelector('#Amount');
+
+            // Format amount on blur
+            amountInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                }
+            });
+
+            // Prevent form submission if invalid
+            form.addEventListener('submit', function(e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
+        });
+    </script>

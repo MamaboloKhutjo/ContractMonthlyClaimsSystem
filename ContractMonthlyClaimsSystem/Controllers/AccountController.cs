@@ -24,7 +24,6 @@ namespace ContractMonthlyClaimsSystem.Controllers
 
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -37,14 +36,27 @@ namespace ContractMonthlyClaimsSystem.Controllers
             var user = await _userRepository.GetUserByCredentialsAsync(model.Username, model.Password);
             if (user != null)
             {
-                _userRepository.CurrentUser = user;
-
-
+                // Store user in session
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
                 HttpContext.Session.SetString("UserName", user.FullName);
                 HttpContext.Session.SetString("UserRole", user.Role);
 
-                return RedirectToAction("Dashboard", GetControllerName(user.Role));
+                TempData["SuccessMessage"] = $"Welcome back, {user.Name}!";
+
+                // Redirect based on role
+                if (user.Role.ToLower() == "lecturer")
+                {
+                    return RedirectToAction("Dashboard", "Lecturer");
+                }
+                else if (user.Role.ToLower() == "manager" || user.Role.ToLower() == "program coordinator")
+                {
+                    return RedirectToAction("Dashboard", "Manager");
+                }
+                else
+                {
+                    // Default redirect for unknown roles
+                    return RedirectToAction("Index", "Home");
+                }
             }
 
             ModelState.AddModelError("", "Invalid username or password.");
@@ -74,7 +86,6 @@ namespace ContractMonthlyClaimsSystem.Controllers
                 return View(model);
             }
 
-            // Create new user
             var user = new User
             {
                 Name = model.Name.Trim(),

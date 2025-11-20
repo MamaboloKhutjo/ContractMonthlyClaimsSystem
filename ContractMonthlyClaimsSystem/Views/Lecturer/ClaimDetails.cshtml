@@ -1,0 +1,164 @@
+﻿@model Claim
+
+@{
+    ViewData["Title"] = "Claim Details";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="card-title mb-0">
+                            <i class="fas fa-file-invoice me-2"></i>Claim @Model.ClaimId
+                        </h2>
+                        <span class="badge @Model.StatusBadgeClass fs-6">@Model.Status</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Claim Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2">Claim Information</h5>
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <th class="text-muted" style="width: 140px;">Claim ID:</th>
+                                    <td><strong>@Model.ClaimId</strong></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Contract:</th>
+                                    <td>@Model.ContractName</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Amount:</th>
+                                    <td class="fw-bold text-primary fs-5">@Model.FormattedAmount</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Submitted:</th>
+                                    <td>@Model.FormattedDate</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Status:</th>
+                                    <td>
+                                        <span class="badge @Model.StatusBadgeClass">@Model.Status</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2">Review Information</h5>
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <th class="text-muted" style="width: 140px;">Reviewed By:</th>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(Model.ReviewedBy))
+                                        {
+                                            <span class="text-muted">Not yet reviewed</span>
+                                        }
+                                        else
+                                        {
+                                            @Model.ReviewedBy
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Review Date:</th>
+                                    <td>@Model.FormattedReviewedDate</td>
+                                </tr>
+                                @if (!string.IsNullOrEmpty(Model.ReviewNotes))
+                                {
+                                    <tr>
+                                        <th class="text-muted">Review Notes:</th>
+                                        <td class="fst-italic">"@Model.ReviewNotes"</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Description</h5>
+                        <div class="p-3 bg-light rounded">
+                            @if (string.IsNullOrEmpty(Model.Description))
+                            {
+                                <span class="text-muted">No description provided</span>
+                            }
+                            else
+                            {
+                                @Model.Description
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Status-specific messages -->
+                    @if (Model.Status == "Approved")
+                    {
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Claim Approved!</strong> This claim has been approved and processed.
+                            @if (!string.IsNullOrEmpty(Model.ReviewNotes))
+                            {
+                                <div class="mt-2">
+                                    <strong>Reviewer Notes:</strong> @Model.ReviewNotes
+                                </div>
+                            }
+                        </div>
+                    }
+                    else if (Model.Status == "Rejected")
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-times-circle me-2"></i>
+                            <strong>Claim Rejected</strong> - This claim was not approved.
+                            @if (!string.IsNullOrEmpty(Model.ReviewNotes))
+                            {
+                                <div class="mt-2">
+                                    <strong>Reason:</strong> @Model.ReviewNotes
+                                </div>
+                            }
+                        </div>
+                    }
+                    else if (Model.Status == "Pending")
+                    {
+                        <div class="alert alert-warning">
+                            <i class="fas fa-clock me-2"></i>
+                            <strong>Pending Review</strong> - This claim is awaiting approval from management.
+                        </div>
+                    }
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-2 justify-content-between mt-4">
+                        <div>
+                            <a href="@Url.Action("MyClaims", "Lecturer")" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to My Claims
+                            </a>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            @if (Model.Status == "Pending" && string.IsNullOrEmpty(Model.ReviewedBy))
+                            {
+                                <form method="post" asp-action="RetractClaim" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="claimId" value="@Model.ClaimId" />
+                                    <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('Are you sure you want to retract this claim? This action cannot be undone.')">
+                                        <i class="fas fa-trash me-2"></i>Retract Claim
+                                    </button>
+                                </form>
+                            }
+
+                            @if (Model.Status == "Rejected")
+                            {
+                                <a href="@Url.Action("SubmitClaim", "Lecturer")" class="btn btn-primary">
+                                    <i class="fas fa-plus-circle me-2"></i>Submit New Claim
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

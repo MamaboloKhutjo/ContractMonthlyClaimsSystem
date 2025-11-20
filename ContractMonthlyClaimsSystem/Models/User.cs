@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace ContractMonthlyClaimsSystem.Models
 {
@@ -68,5 +69,4 @@ namespace ContractMonthlyClaimsSystem.Models
         [Required(ErrorMessage = "Please select your role")]
         public string Role { get; set; }
     }
-
 }
