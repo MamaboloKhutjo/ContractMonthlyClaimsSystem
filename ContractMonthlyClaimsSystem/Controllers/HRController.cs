@@ -663,7 +663,6 @@ namespace ContractMonthlyClaimsSystem.Controllers
                 csv.AppendLine($"\"{claim.ClaimId}\",\"{claim.LecturerName}\",\"{claim.ContractName}\",\"{claim.HoursWorked}\",\"{claim.HourlyRate}\",\"{claim.Amount}\",\"{claim.Status}\",\"{claim.SubmittedDate:yyyy-MM-dd}\",\"{claim.ReviewedBy}\"");
             }
 
-            // Add summary
             csv.AppendLine();
             csv.AppendLine("SUMMARY");
             csv.AppendLine($"Total Claims,{claims.Count}");
@@ -678,11 +677,9 @@ namespace ContractMonthlyClaimsSystem.Controllers
 
         private void LogError(string method, Exception ex)
         {
-            // Log to console or file
             Console.WriteLine($"Error in {method}: {ex.Message}");
             Console.WriteLine($"Stack Trace: {ex.StackTrace}");
 
-            // You can also log to a file or application insights
             var logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Error in {method}: {ex.Message}";
             System.IO.File.AppendAllText("hr_errors.log", logMessage + Environment.NewLine);
         }
