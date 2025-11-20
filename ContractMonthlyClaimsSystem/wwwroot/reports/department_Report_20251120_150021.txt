@@ -1,0 +1,22 @@
+DEPARTMENT CLAIMS SUMMARY
+=========================
+
+Physics:
+  Total Claims: 2
+  Total Amount: R43 200,00
+  Average Claim: R21 600,00
+
+Mathematics:
+  Total Claims: 4
+  Total Amount: R40 300,00
+  Average Claim: R10 075,00
+
+Software:
+  Total Claims: 2
+  Total Amount: R38 500,00
+  Average Claim: R19 250,00
+
+Engineering:
+  Total Claims: 2
+  Total Amount: R36 350,00
+  Average Claim: R18 175,00

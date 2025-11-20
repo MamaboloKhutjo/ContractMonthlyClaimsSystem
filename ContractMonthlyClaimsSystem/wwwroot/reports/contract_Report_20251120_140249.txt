@@ -1,0 +1,22 @@
+CONTRACT CLAIMS ANALYSIS
+========================
+
+Physics 301:
+  Claims: 1
+  Total Hours: 0,0
+  Total Amount: R3 200,00
+
+Engineering 401:
+  Claims: 1
+  Total Hours: 0,0
+  Total Amount: R2 750,00
+
+Software Development 101:
+  Claims: 1
+  Total Hours: 0,0
+  Total Amount: R2 500,00
+
+Mathematics 202:
+  Claims: 1
+  Total Hours: 0,0
+  Total Amount: R1 800,00

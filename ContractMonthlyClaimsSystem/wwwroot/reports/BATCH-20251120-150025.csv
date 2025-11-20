@@ -1,0 +1,7 @@
+EmployeeID,FirstName,LastName,BankAccount,BankName,BranchCode,Amount,Description,ClaimID
+"EMP001","John","Doe","123456789","Standard Bank","051001","2500,00","Payment for Software Development 101","CLM001"
+"EMP001","John","Doe","123456789","Standard Bank","051001","1800,00","Payment for Mathematics 202","CLM002"
+"EMP001","Jane","Smith","123456789","Standard Bank","051001","3200,00","Payment for Physics 301","CLM003"
+"EMP001","John","Doe","123456789","Standard Bank","051001","3500,0","Payment for Mathematics 202","CLM007"
+"EMP001","shepherd","mamabolo","123456789","Standard Bank","051001","17500,0","Payment for Mathematics 202","CLM008"
+"EMP001","shepherd","mamabolo","123456789","Standard Bank","051001","40000,0","Payment for Physics 301","CLM010"

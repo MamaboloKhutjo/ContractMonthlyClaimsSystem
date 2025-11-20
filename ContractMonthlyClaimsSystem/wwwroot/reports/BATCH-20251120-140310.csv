@@ -1,0 +1,2 @@
+EmployeeID,FirstName,LastName,BankAccount,BankName,BranchCode,Amount,Description
+"EMP001","John","Doe","123456789","Standard Bank","051001","1800,00","Payment for Mathematics 202"

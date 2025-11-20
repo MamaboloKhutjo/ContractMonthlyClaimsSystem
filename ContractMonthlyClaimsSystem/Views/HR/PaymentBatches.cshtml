@@ -1,0 +1,107 @@
+﻿@model List<PaymentBatch>
+
+@{
+    ViewData["Title"] = "Payment Batches";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>
+                    <i class="fas fa-file-invoice-dollar me-2"></i>Payment Batches
+                </h1>
+                <a href="@Url.Action("Dashboard")" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Batch Number</th>
+                                <th>Created Date</th>
+                                <th>Created By</th>
+                                <th>Claim Count</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var batch in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@batch.BatchNumber</strong>
+                                    </td>
+                                    <td>@batch.CreatedDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@batch.CreatedBy</td>
+                                    <td>
+                                        <span class="badge bg-primary">@batch.ClaimCount claims</span>
+                                    </td>
+                                    <td class="fw-bold text-success">R@(batch.TotalAmount.ToString("N2"))</td>
+                                    <td>
+                                        <span class="badge bg-success">@batch.Status</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="@Url.Action("DownloadPaymentBatch", new { batchNumber = batch.BatchNumber })"
+                                               class="btn btn-outline-primary" title="Download CSV">
+                                                <i class="fas fa-download me-1"></i>CSV
+                                            </a>
+                                            <a href="@batch.FilePath" target="_blank"
+                                               class="btn btn-outline-info" title="View File">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <button class="btn btn-outline-secondary"
+                                                    onclick="copyToClipboard('@batch.BatchNumber')"
+                                                    title="Copy Batch Number">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-file-invoice-dollar fa-3x text-muted mb-3"></i>
+                <h3 class="text-muted">No Payment Batches</h3>
+                <p class="text-muted">No payment batches have been generated yet.</p>
+                <form method="post" asp-action="GeneratePaymentBatch" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-2"></i>Generate First Payment Batch
+                    </button>
+                </form>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                toastr.success('Batch number copied to clipboard: ' + text);
+            }, function(err) {
+                toastr.error('Failed to copy batch number');
+            });
+        }
+    </script>
+}

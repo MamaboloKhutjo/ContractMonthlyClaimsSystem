@@ -13,10 +13,8 @@ namespace ContractMonthlyClaimsSystem.Models
 
         public DateTime SubmittedDate { get; set; }
 
-        // Remove direct Amount input, now calculated
         public decimal Amount { get; set; }
 
-        // New fields for calculation
         public decimal HoursWorked { get; set; }
         public decimal HourlyRate { get; set; }
 
@@ -30,7 +28,6 @@ namespace ContractMonthlyClaimsSystem.Models
         public DateTime? ReviewedDate { get; set; }
         public string ReviewNotes { get; set; } = string.Empty;
 
-        // Computed properties for display
         public string FormattedAmount => $"R {Amount:N2}";
         public string FormattedHours => $"{HoursWorked:N1} hours";
         public string FormattedHourlyRate => $"R {HourlyRate:N2}/hour";

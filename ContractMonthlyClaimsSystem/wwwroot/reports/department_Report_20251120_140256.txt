@@ -1,0 +1,18 @@
+DEPARTMENT CLAIMS SUMMARY
+=========================
+
+Physics:
+  Total Claims: 1
+  Total Amount: R3 200,00
+
+Engineering:
+  Total Claims: 1
+  Total Amount: R2 750,00
+
+Software:
+  Total Claims: 1
+  Total Amount: R2 500,00
+
+Mathematics:
+  Total Claims: 1
+  Total Amount: R1 800,00

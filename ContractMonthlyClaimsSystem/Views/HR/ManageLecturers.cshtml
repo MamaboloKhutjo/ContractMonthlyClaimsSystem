@@ -1,0 +1,76 @@
+﻿@model List<User>
+
+@{
+    ViewData["Title"] = "Manage Lecturers";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>
+                    <i class="fas fa-users me-2"></i>Manage Lecturers
+                </h1>
+                <div class="btn-group">
+                    <a href="@Url.Action("DownloadLecturerData")" class="btn btn-outline-primary">
+                        <i class="fas fa-download me-2"></i>Export CSV
+                    </a>
+                    <a href="@Url.Action("PrintLecturers")" class="btn btn-outline-secondary" target="_blank">
+                        <i class="fas fa-print me-2"></i>Print List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Total Claims</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var lecturer in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>EMP@(lecturer.Id)</strong>
+                                </td>
+                                <td>@lecturer.FullName</td>
+                                <td>@lecturer.Name.ToLower().@lecturer.Surname.ToLower()</td>
+                                <td>Computer Science</td>
+                                <td>
+                                    <span class="badge bg-primary">0 claims</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">Active</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="@Url.Action("EditLecturer", new { id = lecturer.Id })"
+                                           class="btn btn-outline-primary">
+                                            <i class="fas fa-edit me-1"></i>Edit
+                                        </a>
+                                        <a href="@Url.Action("DownloadLecturerData")"
+                                           class="btn btn-outline-info" title="Download Data">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

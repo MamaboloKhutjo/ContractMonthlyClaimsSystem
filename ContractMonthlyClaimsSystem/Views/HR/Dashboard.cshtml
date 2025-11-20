@@ -1,0 +1,385 @@
+﻿@model HRDashboardViewModel
+
+@{
+    ViewData["Title"] = "HR Dashboard";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">
+                <i class="fas fa-users-cog me-2 text-primary"></i>HR Dashboard
+            </h1>
+            <p class="text-muted">Automated claim processing and lecturer management</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Lecturers
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalLecturers</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pending Claims
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ActiveClaims</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-invoice-dollar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Claims This Month
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ClaimsThisMonth</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Total Pending Amount
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">R@(Model.TotalAmountPending.ToString("N2"))</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bolt me-2 text-primary"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="d-grid">
+                                <form method="post" asp-action="GeneratePaymentBatch">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="fas fa-file-invoice-dollar me-2"></i>Generate Payment Batch
+                                    </button>
+                                </form>
+                                <small class="text-muted mt-1 d-block">Process all approved claims for payment</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="d-grid">
+                                <a href="@Url.Action("ManageLecturers")" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-user-edit me-2"></i>Manage Lecturers
+                                </a>
+                                <small class="text-muted mt-1 d-block">Update lecturer information and details</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="d-grid">
+                                <a href="@Url.Action("DownloadLecturerData")" class="btn btn-info btn-lg">
+                                    <i class="fas fa-download me-2"></i>Export Lecturer Data
+                                </a>
+                                <small class="text-muted mt-1 d-block">Download complete lecturer database</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Report Generation -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h6 class="text-muted mb-3">Generate Reports</h6>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <form method="post" asp-action="GenerateReport" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="reportType" value="monthly">
+                                    <input type="hidden" name="fromDate" value="@DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd")">
+                                    <input type="hidden" name="toDate" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        <i class="fas fa-chart-bar me-2"></i>Monthly Report
+                                    </button>
+                                </form>
+
+                                <form method="post" asp-action="GenerateReport" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="reportType" value="department">
+                                    <input type="hidden" name="fromDate" value="@DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd")">
+                                    <input type="hidden" name="toDate" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        <i class="fas fa-building me-2"></i>Department Report
+                                    </button>
+                                </form>
+
+                                <form method="post" asp-action="GenerateReport" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="reportType" value="contract">
+                                    <input type="hidden" name="fromDate" value="@DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd")">
+                                    <input type="hidden" name="toDate" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        <i class="fas fa-file-contract me-2"></i>Contract Report
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Sections -->
+    <div class="row">
+        <!-- Recent Approved Claims -->
+        <div class="col-xl-6 col-md-12 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-check-circle me-2 text-success"></i>Recently Approved Claims
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentApprovedClaims.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Claim ID</th>
+                                        <th>Lecturer</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var claim in Model.RecentApprovedClaims)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <small class="text-muted">@claim.ClaimId</small>
+                                            </td>
+                                            <td>
+                                        
+                                            </td>
+                                            <td class="fw-bold text-success">
+                                                <small>@claim.FormattedAmount</small>
+                                            </td>
+                                            <td>
+                                                <small>@claim.FormattedDate</small>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-inbox fa-2x mb-2"></i>
+                            <p>No recently approved claims</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Recently Updated Lecturers -->
+        <div class="col-xl-6 col-md-12 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-edit me-2 text-primary"></i>Recently Updated Lecturers
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentUpdatedLecturers.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var lecturer in Model.RecentUpdatedLecturers)
+                            {
+                                <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div>
+                                        <h6 class="mb-1">@lecturer.FullName</h6>
+                                  
+                                    </div>
+                                  
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-users fa-2x mb-2"></i>
+                            <p>No recently updated lecturers</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Batches and Reports -->
+    <div class="row">
+        <!-- Recent Payment Batches -->
+        <div class="col-xl-6 col-md-12 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-file-invoice me-2 text-success"></i>Recent Payment Batches
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentPaymentBatches.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var batch in Model.RecentPaymentBatches)
+                            {
+                                <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div>
+                                        <h6 class="mb-1">@batch.BatchNumber</h6>
+                                        <small class="text-muted">@batch.ClaimCount claims • R@(batch.TotalAmount.ToString("N2"))</small>
+                                    </div>
+                                    <span class="badge bg-success">@batch.Status</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="mt-3 text-center">
+                            <a href="@Url.Action("PaymentBatches")" class="btn btn-sm btn-outline-primary">
+                                View All Batches
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-file-invoice-dollar fa-2x mb-2"></i>
+                            <p>No payment batches generated</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Generated Reports -->
+        <div class="col-xl-6 col-md-12 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-pie me-2 text-info"></i>Recently Generated Reports
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.GeneratedReports.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var report in Model.GeneratedReports)
+                            {
+                                <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div>
+                                        <h6 class="mb-1">@report.ReportName</h6>
+                                        <small class="text-muted">@report.ReportType • @report.GeneratedBy</small>
+                                    </div>
+                                    <small class="text-muted">
+                                        @report.GeneratedDate.ToString("MMM dd")
+                                    </small>
+                                </div>
+                            }
+                        </div>
+                        <div class="mt-3 text-center">
+                            <a href="@Url.Action("Reports")" class="btn btn-sm btn-outline-primary">
+                                View All Reports
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-chart-bar fa-2x mb-2"></i>
+                            <p>No reports generated</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success/Error Messages -->
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show success/error messages
+            @if (TempData["SuccessMessage"] != null)
+            {
+                    <text>
+                    toastr.success('@TempData["SuccessMessage"]');
+                    </text>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                    <text>
+                    toastr.error('@TempData["ErrorMessage"]');
+                    </text>
+            }
+
+            // Auto-download generated report
+            @if (TempData["DownloadPath"] != null)
+            {
+                    <text>
+                    setTimeout(function() {
+                        window.open('@TempData["DownloadPath"]', '_blank');
+                    }, 1000);
+                    </text>
+            }
+        });
+    </script>
+}

@@ -24,18 +24,26 @@ namespace ContractMonthlyClaimsSystem.Controllers
 
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            Console.WriteLine($"Login attempt for: {model.Username}");
+
             if (!ModelState.IsValid)
             {
+                Console.WriteLine("Model state invalid");
                 return View(model);
             }
 
             var user = await _userRepository.GetUserByCredentialsAsync(model.Username, model.Password);
+            Console.WriteLine($"User found: {user != null}");
+
             if (user != null)
             {
+                Console.WriteLine($"User role: {user.Role}");
+
                 // Store user in session
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
                 HttpContext.Session.SetString("UserName", user.FullName);
@@ -46,22 +54,31 @@ namespace ContractMonthlyClaimsSystem.Controllers
                 // Redirect based on role
                 if (user.Role.ToLower() == "lecturer")
                 {
+                    Console.WriteLine("Redirecting to Lecturer Dashboard");
                     return RedirectToAction("Dashboard", "Lecturer");
                 }
                 else if (user.Role.ToLower() == "manager" || user.Role.ToLower() == "program coordinator")
                 {
+                    Console.WriteLine("Redirecting to Manager Dashboard");
                     return RedirectToAction("Dashboard", "Manager");
+                }
+                else if (user.Role.ToLower() == "hr")
+                {
+                    Console.WriteLine("Redirecting to HR Dashboard");
+                    return RedirectToAction("Dashboard", "HR");
                 }
                 else
                 {
-                    // Default redirect for unknown roles
+                    Console.WriteLine($"Unknown role: {user.Role}, redirecting to Home");
                     return RedirectToAction("Index", "Home");
                 }
             }
 
+            Console.WriteLine("Invalid credentials");
             ModelState.AddModelError("", "Invalid username or password.");
             return View(model);
         }
+
 
         [HttpGet]
         public IActionResult Register()
@@ -126,6 +143,7 @@ namespace ContractMonthlyClaimsSystem.Controllers
                 "lecturer" => "Lecturer",
                 "manager" => "Manager",
                 "program coordinator" => "Manager",
+                "hr" => "HR",
                 _ => "Home"
             };
         }
