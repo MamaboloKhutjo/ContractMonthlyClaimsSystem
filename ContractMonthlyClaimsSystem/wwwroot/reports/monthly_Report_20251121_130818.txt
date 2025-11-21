@@ -1,0 +1,7 @@
+MONTHLY CLAIMS REPORT: 2025-10-22 to 2025-11-21
+==============================================
+Total Claims: 4
+Total Amount: R10250,00
+Approved Claims: 2
+Pending Claims: 1
+Rejected Claims: 1

@@ -82,7 +82,6 @@ namespace ContractMonthlyClaimsSystem.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // Create a fresh model
             var model = new SubmitClaimViewModel();
             return View(model);
         }
@@ -120,7 +119,6 @@ namespace ContractMonthlyClaimsSystem.Controllers
 
                 Console.WriteLine($"Server-side validation: Hours={model.HoursWorked}, Rate={model.HourlyRate}, Amount={calculatedAmount}");
 
-                // Validate amount limits
                 if (calculatedAmount > 50000)
                 {
                     ModelState.AddModelError("", "Claim amount cannot exceed R50,000 per submission.");
@@ -135,7 +133,6 @@ namespace ContractMonthlyClaimsSystem.Controllers
                     return View("SubmitClaim", model);
                 }
 
-                // Generate a unique claim ID
                 var allClaims = await _claimRepository.GetClaimsAsync();
                 var claimNumber = allClaims.Count + 1;
                 var claimId = $"CLM{claimNumber:000}";

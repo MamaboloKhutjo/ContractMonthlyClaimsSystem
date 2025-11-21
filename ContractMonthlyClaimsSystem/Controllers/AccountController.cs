@@ -95,7 +95,6 @@ namespace ContractMonthlyClaimsSystem.Controllers
                 return View(model);
             }
 
-            // Check if user already exists
             bool userExists = await _userRepository.UserExistsAsync(model.Name, model.Surname);
             if (userExists)
             {

@@ -150,8 +150,8 @@ namespace ContractMonthlyClaimsSystem.Controllers
                 Name = lecturer.Name,
                 Surname = lecturer.Surname,
                 Email = $"{lecturer.Name.ToLower()}.{lecturer.Surname.ToLower()}@university.com",
-                PhoneNumber = "+27 12 345 6789", // Default for demo
-                Department = "Computer Science", // Default for demo
+                PhoneNumber = "+27 12 345 6789", 
+                Department = "Computer Science", 
                 EmployeeId = $"EMP{lecturer.Id:000}",
                 BankAccountNumber = "123456789",
                 BankName = "Standard Bank",
@@ -186,7 +186,6 @@ namespace ContractMonthlyClaimsSystem.Controllers
                 // Update lecturer information
                 lecturer.Name = model.Name;
                 lecturer.Surname = model.Surname;
-                // In a real application, you'd save the additional fields to the database
 
                 await _userRepository.UpdateUserAsync(lecturer);
 
@@ -430,7 +429,7 @@ namespace ContractMonthlyClaimsSystem.Controllers
                     report.AppendLine($"MONTHLY CLAIMS REPORT: {fromDate:yyyy-MM-dd} to {toDate:yyyy-MM-dd}");
                     report.AppendLine("==============================================");
                     report.AppendLine($"Total Claims: {claims.Count}");
-                    report.AppendLine($"Total Amount: R{claims.Sum(c => c.Amount):N2}");
+                    report.AppendLine($"Total Amount: R{claims.Sum(c => c.Amount)}");
                     report.AppendLine($"Approved Claims: {claims.Count(c => c.Status == "Approved" || c.Status == "Paid")}");
                     report.AppendLine($"Pending Claims: {claims.Count(c => c.Status == "Pending")}");
                     report.AppendLine($"Rejected Claims: {claims.Count(c => c.Status == "Rejected")}");
@@ -445,8 +444,8 @@ namespace ContractMonthlyClaimsSystem.Controllers
                     {
                         report.AppendLine($"\n{group.Key}:");
                         report.AppendLine($"  Total Claims: {group.Count()}");
-                        report.AppendLine($"  Total Amount: R{group.Sum(c => c.Amount):N2}");
-                        report.AppendLine($"  Average Claim: R{group.Average(c => c.Amount):N2}");
+                        report.AppendLine($"  Total Amount: R{group.Sum(c => c.Amount)}");
+                        report.AppendLine($"  Average Claim: R{group.Average(c => c.Amount)}");
                     }
                     break;
 
@@ -459,9 +458,9 @@ namespace ContractMonthlyClaimsSystem.Controllers
                     {
                         report.AppendLine($"\n{group.Key}:");
                         report.AppendLine($"  Claims: {group.Count()}");
-                        report.AppendLine($"  Total Hours: {group.Sum(c => c.HoursWorked):N1}");
-                        report.AppendLine($"  Total Amount: R{group.Sum(c => c.Amount):N2}");
-                        report.AppendLine($"  Average Rate: R{group.Average(c => c.HourlyRate):N2}/hour");
+                        report.AppendLine($"  Total Hours: {group.Sum(c => c.HoursWorked)}");
+                        report.AppendLine($"  Total Amount: R{group.Sum(c => c.Amount)}");
+                        report.AppendLine($"  Average Rate: R{group.Average(c => c.HourlyRate)}/hour");
                     }
                     break;
 
@@ -469,8 +468,8 @@ namespace ContractMonthlyClaimsSystem.Controllers
                     report.AppendLine($"CLAIMS SUMMARY REPORT: {fromDate:yyyy-MM-dd} to {toDate:yyyy-MM-dd}");
                     report.AppendLine("==================================================");
                     report.AppendLine($"Total Claims Submitted: {claims.Count}");
-                    report.AppendLine($"Total Amount Claimed: R{claims.Sum(c => c.Amount):N2}");
-                    report.AppendLine($"Average Claim Amount: R{claims.Average(c => c.Amount):N2}");
+                    report.AppendLine($"Total Amount Claimed: R{claims.Sum(c => c.Amount)}");
+                    report.AppendLine($"Average Claim Amount: R{claims.Average(c => c.Amount)}");
                     break;
             }
 
@@ -486,9 +485,9 @@ namespace ContractMonthlyClaimsSystem.Controllers
             invoice.AppendLine($"Claim ID: {claim.ClaimId}");
             invoice.AppendLine($"Lecturer: {claim.LecturerName}");
             invoice.AppendLine($"Contract: {claim.ContractName}");
-            invoice.AppendLine($"Hours Worked: {claim.HoursWorked:N1}");
-            invoice.AppendLine($"Hourly Rate: R{claim.HourlyRate:N2}");
-            invoice.AppendLine($"Total Amount: R{claim.Amount:N2}");
+            invoice.AppendLine($"Hours Worked: {claim.HoursWorked}");
+            invoice.AppendLine($"Hourly Rate: R{claim.HourlyRate}");
+            invoice.AppendLine($"Total Amount: R{claim.Amount}");
             invoice.AppendLine($"Status: {claim.Status}");
             invoice.AppendLine($"Submitted: {claim.SubmittedDate:yyyy-MM-dd}");
 

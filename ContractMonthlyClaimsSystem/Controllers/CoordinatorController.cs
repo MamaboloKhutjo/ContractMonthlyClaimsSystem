@@ -126,35 +126,31 @@ namespace ContractMonthlyClaimsSystem.Controllers
                 result.NeedsManualReview = true;
             }
 
-            // Check maximum monthly hours
             if (claim.HoursWorked > 160)
             {
                 flags.Add($"Hours worked ({claim.HoursWorked}) exceeds typical monthly maximum");
                 result.NeedsManualReview = true;
             }
 
-            // Check claim amount limits
             if (claim.Amount > 50000)
             {
                 flags.Add($"Claim amount R{claim.Amount} exceeds R50,000 limit");
                 result.IsValid = false;
             }
 
-            // Check minimum claim amount
             if (claim.Amount < 10)
             {
                 flags.Add($"Claim amount R{claim.Amount} below R10 minimum");
                 result.IsValid = false;
             }
 
-            // Check for unusual patterns
             if (claim.HourlyRate > 800)
             {
                 flags.Add("Very high hourly rate detected");
                 result.NeedsManualReview = true;
             }
 
-            if (claim.HoursWorked > 744) // Maximum possible hours in a month
+            if (claim.HoursWorked > 744) 
             {
                 flags.Add("Hours worked exceeds maximum possible");
                 result.IsValid = false;

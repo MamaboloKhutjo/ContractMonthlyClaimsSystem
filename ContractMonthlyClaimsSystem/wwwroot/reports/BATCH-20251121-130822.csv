@@ -1,0 +1,3 @@
+EmployeeID,FirstName,LastName,BankAccount,BankName,BranchCode,Amount,Description,ClaimID
+"EMP001","John","Doe","123456789","Standard Bank","051001","1800,00","Payment for Mathematics 202","CLM002"
+"EMP001","Jane","Smith","123456789","Standard Bank","051001","3200,00","Payment for Physics 301","CLM003"

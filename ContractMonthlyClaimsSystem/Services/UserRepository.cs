@@ -39,6 +39,16 @@ namespace ContractMonthlyClaimsSystem.Services
                     Password = "password",
                     Role = "Program Coordinator"
                 });
+
+                _users.Add(new User
+                {
+                    Id = 4,
+                    Name = "Khutjo",
+                    Surname = "Mamabolo",
+                    Password = "password",
+                    Role = "hr"
+                });
+
             }
         }
 
